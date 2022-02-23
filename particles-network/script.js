@@ -2,7 +2,7 @@
 const canvas = document.getElementById('canvas')
 /** @type {CanvasRenderingContext2D} */
 const ctx = canvas.getContext('2d')
-const particlesArray = []
+const particles = []
 
 // When document is loaded, create particles pattern
 window.addEventListener('load', () => {
@@ -14,9 +14,9 @@ window.addEventListener('load', () => {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // populate particlesArray with particles.
+  // populate particles array with particles.
   for (let i = 0; i <= canvas.width / 4; i++) {
-    particlesArray.push(new Particles())
+    particles.push(new Particle())
   }
   // Create a pattern of particles.
   createPattern()
@@ -40,15 +40,15 @@ window.addEventListener('resize', () => {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Set array of particles to empty,
-  // then populate particlesArray with particles again
-  particlesArray.length = 0
+  // then populate particles array with particles again
+  particles.length = 0
   for (let i = 0; i <= canvas.width / 4; i++) {
-    particlesArray.push(new Particles())
+    particles.push(new Particle())
   }
   createPattern()
 })
 
-class Particles {
+class Particle {
   constructor() {
     this.x = Math.random() * canvas.width
     this.y = Math.random() * canvas.height
@@ -82,23 +82,23 @@ class Particles {
 }
 
 function createPattern() {
-  for (let i = 0; i < particlesArray.length; i++) {
-    particlesArray[i].draw()
-    particlesArray[i].move()
+  for (let i = 0; i < particles.length; i++) {
+    particles[i].draw()
+    particles[i].move()
 
-    for (let j = 0; j < particlesArray.length; j++) {
+    for (let j = 0; j < particles.length; j++) {
       // Pythagorean theorem to calculate distance between particles
-      const dX = particlesArray[i].x - particlesArray[j].x
-      const dY = particlesArray[i].y - particlesArray[j].y
+      const dX = particles[i].x - particles[j].x
+      const dY = particles[i].y - particles[j].y
       const distance = Math.sqrt(dX * dX + dY * dY)
 
       // Draw line between particles if distance is less than 100
       if (distance < 100) {
         ctx.beginPath()
         ctx.strokeStyle = 'white'
-        ctx.lineWidth = particlesArray[i].size / 40
-        ctx.moveTo(particlesArray[i].x, particlesArray[i].y)
-        ctx.lineTo(particlesArray[j].x, particlesArray[j].y)
+        ctx.lineWidth = particles[i].size / 40
+        ctx.moveTo(particles[i].x, particles[i].y)
+        ctx.lineTo(particles[j].x, particles[j].y)
         ctx.stroke()
         ctx.closePath()
       }
