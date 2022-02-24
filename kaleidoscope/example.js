@@ -19,7 +19,6 @@ window.addEventListener("load", function () {
     offset = (offset - 1) % 1024
     var i = 0;
 
-
     //draw kaleidoscope first row.
     ctx.save();
     ctx.fillStyle = pat;

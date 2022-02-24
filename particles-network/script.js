@@ -3,6 +3,7 @@ const canvas = document.getElementById('canvas')
 /** @type {CanvasRenderingContext2D} */
 const ctx = canvas.getContext('2d')
 const particles = []
+let particleColor = 'rgba(192,192,192)'
 
 // When document is loaded, create particles pattern
 window.addEventListener('load', () => {
@@ -22,30 +23,22 @@ window.addEventListener('load', () => {
   createPattern()
 })
 
-// When document loose focus, reacreate the pattern.
-window.addEventListener('onblur', () => {
-  // Set the canvas background to black.
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  // Reacrate the pattern.
-  createPattern()
-})
-
 window.addEventListener('resize', () => {
   // Maintain canvas width and height when widow's size changes.
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
-  // Set the canvas background to black.
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+})
 
-  // Set array of particles to empty,
-  // then populate particles array with particles again
-  particles.length = 0
-  for (let i = 0; i <= canvas.width / 4; i++) {
-    particles.push(new Particle())
-  }
-  createPattern()
+const mouse = {
+  x: undefined,
+  y: undefined
+}
+
+window.addEventListener('mouseover', (event) => {
+  mouse.x = event.clientX
+  mouse.y = event.clientY
+
+  
 })
 
 class Particle {
@@ -55,12 +48,13 @@ class Particle {
     this.size = Math.random() * 3 + 1
     this.speedX = Math.random() * 3 - 1
     this.speedY = Math.random() * 3 - 1.5
+    this.color = particleColor
   }
 
   draw() {
     // Draw the particle.
     ctx.beginPath()
-    ctx.fillStyle = 'white'
+    ctx.fillStyle = this.color
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
     ctx.fill()
     ctx.closePath()
@@ -71,6 +65,8 @@ class Particle {
     this.x += this.speedX / 4
     this.y += this.speedY / 4
 
+    // If the mouse is over the particle, make it bigger.
+    
     // if particle is out of bounds, bounce it back
     if (this.x > canvas.width || this.x < 0) {
       this.speedX = -this.speedX
@@ -95,7 +91,7 @@ function createPattern() {
       // Draw line between particles if distance is less than 100
       if (distance < 100) {
         ctx.beginPath()
-        ctx.strokeStyle = 'white'
+        ctx.strokeStyle = particles[i].color
         ctx.lineWidth = particles[i].size / 40
         ctx.moveTo(particles[i].x, particles[i].y)
         ctx.lineTo(particles[j].x, particles[j].y)
