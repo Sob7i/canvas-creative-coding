@@ -34,12 +34,10 @@ const mouse = {
   y: undefined
 }
 
-window.addEventListener('mouseover', (event) => {
-  mouse.x = event.clientX
-  mouse.y = event.clientY
-
-  
-})
+// window.addEventListener('mouseover', (event) => {
+//   mouse.x = event.clientX
+//   mouse.y = event.clientY
+// })
 
 class Particle {
   constructor() {

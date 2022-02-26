@@ -11,7 +11,7 @@ const ctx = canvas.getContext("2d");
 // const patR = ctx.createPattern(baseRImg, "repeat");
 
 // The triangle side length.
-let tSide = 350;
+let tSide = 750;
 // the space between the triangles.
 let offset = 150;
 const triangles = [];
@@ -26,31 +26,45 @@ window.addEventListener("load", () => {
   createPattern();
 });
 
+window.addEventListener("scroll", (event) => {
+  console.log('event', event)
+  tSide+=10
+});
+
 class Triangle {
   constructor() {
     // The equation for calculating an equilateral triangle's height is:
     // h = sqrt(3)/2 * a | where 'a' is the side length.
-    this.tSide = tSide;
-    this.tHeight = (Math.sqrt(3) / 2) * this.tSide;
+    // this.tSide = tSide;
+    this.tHeight = (Math.sqrt(3) / 2) * tSide;
   }
-
   draw() {
+
     // Move to the starting point.
     ctx.translate(offset, offset);
     ctx.strokeStyle = "white";
     ctx.beginPath();
-    ctx.moveTo(this.tSide, this.tHeight);
-    ctx.lineTo(this.tSide / 2, 0);
-    ctx.lineTo(0, this.tHeight);
+    /* 
+     * Here we move only on the x axis to create  a square with
+     * (tSide x tSide) dimensions where the triangle is going to be drawn in .
+    */
+    ctx.moveTo(tSide, 0);
+
+    ctx.lineTo(tSide / 2, this.tHeight);
+    ctx.lineTo(0, 0);
+    // ctx.moveTo(this.tSide, this.tHeight);
+    // ctx.lineTo(this.tSide / 2, 0);
+    // ctx.lineTo(0, this.tHeight);
     ctx.closePath();
     ctx.stroke();
   }
 }
 
 function createPattern() {
-  console.log('triangles', triangles)
+  console.log("triangles", triangles);
   for (let i = 0; i < triangles.length; i++) {
     triangles[i].draw();
+
   }
 }
 
