@@ -78,7 +78,7 @@ class Particle {
 function createPattern() {
   for (let i = 0; i < particles.length; i++) {
     particles[i].draw()
-    particles[i].move()
+    // particles[i].move()
 
     for (let j = 0; j < particles.length; j++) {
       // Pythagorean theorem to calculate distance between particles
