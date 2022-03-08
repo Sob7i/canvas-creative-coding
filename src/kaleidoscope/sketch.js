@@ -11,7 +11,7 @@ let img;
 let hex;
 
 function preload() {
-  img = loadImage("./assets/img2.jpg");
+  img = loadImage("./assets/img3.jpg");
 }
 
 function setup() {
@@ -20,7 +20,7 @@ function setup() {
 
   //? create a graphics object that is used as a mask
   mask = createGraphics(tSide, tHeight);
-  mask.noStroke();
+  // mask.noStroke();
   mask.beginShape();
   mask.vertex(0, 0);
   mask.vertex(mask.width / 2, mask.height);
@@ -34,23 +34,23 @@ function setup() {
   //? create shapes with the image, reflections, and rotations
   const shape1 = createShape(img, false, 0);
   const shape2 = createShape(img, true, 1);
-  const shape3 = createShape(img, false, 3);
+  const shape3 = createShape(img, false, 5);
   const shape4 = createShape(img, true, 4);
-  const shape5 = createShape(img, false, 5);
-  const shape6 = createShape(img, false, 6);
+  const shape5 = createShape(img, false, 3);
+  const shape6 = createShape(img, false, 2);
 
   // //? draw the shapes
   hex.image(shape1, mask.width / 2, 0);
   hex.image(shape2, mask.width, 0);
   hex.image(shape3, 0, 0);
-  hex.image(shape4, 0, mask.height )
+  hex.image(shape4, 0, mask.height);
   hex.image(shape5, mask.width / 2, mask.height);
   hex.image(shape6, mask.width, mask.height);
 
   image(hex, 0, 0);
 
   // frameRate(10);
-  noLoop();
+  // noLoop();
 }
 
 function windowResized() {
@@ -97,7 +97,7 @@ function createShape(img, reflect, rotations) {
 
   //? if the image should be reflected, flip the image
   if (reflect) {
-    g.scale(-1, 1);
+    // g.scale(-1, 1);
   }
 
   //? rotate the image by 60 degrees for each rotation
