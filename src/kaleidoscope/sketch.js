@@ -33,10 +33,10 @@ function setup() {
 
   //? create shapes with the image, reflections, and rotations
   const shape1 = createShape(img, false, 0);
-  const shape2 = createShape(img, true, 1);
-  const shape3 = createShape(img, false, 5);
-  const shape4 = createShape(img, true, 4);
-  const shape5 = createShape(img, false, 3);
+  const shape2 = createShape(img, true, 5);
+  const shape3 = createShape(img, true, 1);
+  const shape4 = createShape(img, false, 4);
+  const shape5 = createShape(img, true, 3);
   const shape6 = createShape(img, false, 2);
 
   // //? draw the shapes
@@ -97,7 +97,7 @@ function createShape(img, reflect, rotations) {
 
   //? if the image should be reflected, flip the image
   if (reflect) {
-    // g.scale(-1, 1);
+    g.scale(-1, 1);
   }
 
   //? rotate the image by 60 degrees for each rotation
