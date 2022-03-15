@@ -1,35 +1,39 @@
 //? tSide is the length of the side of the triangle
-let tSide = 150;
+let tSide = 1750;
 
 //? This is calculating the height of the triangle based on the side length.
 let tHeight = (tSide * Math.sqrt(3)) / 2;
 
-//? mask is a graphics object that is used to create a triangular shape
+//? mask is a graphics object that is used to create a triangular shape,
 //? that is used as a mask for the image.
 let mask;
-//? A hexagon graphic object
 let hex;
+let g;
+let imgs = [];
 let img;
-let shape1, shape2, shape3, shape4, shape5, shape6;
+let imgIndex = 1;
+let imgsCount = 3;
 
 function preload() {
-  img = loadImage("./assets/img3.jpg");
+  for (let i = 1; i <= imgsCount; i++) {
+    imgs[i - 1] = loadImage(`assets/img${i}.jpg`);
+    img = imgs[0];
+  }
+}
+
+function updateImage() {
+  let newImg;
+
+  imgIndex = (imgIndex + 1) % imgsCount;
+  if (imgs[imgIndex + 1] === imgsCount) newImg = imgs[0];
+  else newImg = imgs[imgIndex];
+  return newImg;
 }
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight).background(25);
-
-  //? create a graphics object that is used as a mask
-  mask = createGraphics(tSide, tHeight);
-  // mask.noStroke();
-  mask.beginShape();
-  mask.vertex(0, 0);
-  mask.vertex(mask.width / 2, mask.height);
-  mask.vertex(mask.width, 0);
-  mask.endShape(CLOSE);
-  img.mask(mask);
-
-  // frameRate(10);
+  background(25);
+  frameRate(10);
   // noLoop();
 }
 
@@ -39,41 +43,55 @@ function windowResized() {
 
 function mouseWheel(event) {
   if (event.delta > 0) {
-    if (mask.height >= 2700) return;
-    mask.width += 20;
-    mask.height = (mask.width * Math.sqrt(3)) / 2;
+    if (tSide <= 150) {
+      img = updateImage();
+      tSide = 1750;
+      tHeight = (tSide * Math.sqrt(3)) / 2;
+      return;
+    } else if (tSide > 150 && tSide < 700) {
+      tSide -= 5;
+      tHeight = (tSide * Math.sqrt(3)) / 2;
+    } else {
+      tSide -= 30;
+      tHeight = (tSide * Math.sqrt(3)) / 2;
+    }
   } else {
-    if (mask.width <= 70) return;
-    mask.width -= 20;
-    mask.height = (mask.width * Math.sqrt(3)) / 2;
+    if (tHeight >= 2700) {
+      return;
+    } else {
+      tSide += 30;
+      tHeight = (tSide * Math.sqrt(3)) / 2;
+    }
   }
 }
 
 function draw() {
-  background(25);
   translate(width / 2 - tSide, height / 2 - tHeight);
 
-  const shape1 = createShape(img, false, 0);
-  const shape2 = createShape(img, true, 5);
-  const shape3 = createShape(img, true, 1);
-  const shape4 = createShape(img, false, 4);
-  const shape5 = createShape(img, true, 3);
-  const shape6 = createShape(img, false, 2);
+  //? create a graphics object that is used as a mask
+  mask = createGraphics(tSide, tHeight);
+  mask.beginShape();
+  mask.vertex(0, 0);
+  mask.vertex(tSide / 2, tHeight);
+  mask.vertex(tSide, 0);
+  mask.endShape(CLOSE);
+  img.mask(mask);
 
-  hex = createGraphics(mask.width * 2, mask.height * 2); 
-  hex.image(shape1, mask.width / 2, 0);
-  hex.image(shape2, mask.width, 0);
-  hex.image(shape3, 0, 0);
-  hex.image(shape4, 0, mask.height);
-  hex.image(shape5, mask.width / 2, mask.height);
-  hex.image(shape6, mask.width, mask.height);
+  hex = createGraphics(mask.width * 2, mask.height * 2);
+  hex.image(createShape(img, false, 0), mask.width / 2, 0);
+  hex.image(createShape(img, true, 5), mask.width, 0);
+  hex.image(createShape(img, true, 1), 0, 0);
+  hex.image(createShape(img, false, 4), 0, mask.height);
+  hex.image(createShape(img, true, 3), mask.width / 2, mask.height);
+  hex.image(createShape(img, false, 2), mask.width, mask.height);
+  image(hex, 0, 0);
 
   createPattern();
 }
 
 function createShape(img, reflect, rotations) {
   //? g is the graphics object where we will draw the shape onto
-  let g = createGraphics(mask.width, mask.height);
+  g = createGraphics(mask.width, mask.height);
   //? a, b, c are points on the vertical axis of the triangle
   //? a starts at the bottom of the triangle and moves up to its center
   const a = (mask.width / 2) * tan(radians(30));
@@ -86,7 +104,6 @@ function createShape(img, reflect, rotations) {
   g.imageMode(CENTER);
   // ? move the image to the center of the graphics object
   g.translate(g.width / 2, b);
-
   // ? if the number of rotations is even, move the image up
   if (rotations % 2 === 0) {
     g.translate(0, mask.height - 2 * b);
@@ -127,112 +144,33 @@ function createPattern() {
   }
 }
 
-// function createTriangles(x, y) {
-//   // Up middle triangle both directions
-//   triangle(x, 2 * y, x + tSide / 2, 2 * y + tHeight, x + tSide, 2 * y);
-//   triangle(-x, 2 * -y, -x + tSide / 2, 2 * -y + tHeight, -x + tSide, 2 * -y);
-//   triangle(x, 2 * -y, x + tSide / 2, 2 * -y + tHeight, x + tSide, 2 * -y);
-//   triangle(-x, 2 * y, -x + tSide / 2, 2 * y + tHeight, -x + tSide, 2 * y);
+//? Hexagon
+// hex.image(createShape(img, false, 0), 0, 0);
+// hex.image(createShape(img, true, 5), mask.width / 2, 0);
+// hex.image(createShape(img, true, 1), -mask.width / 2, 0);
+// hex.image(createShape(img, false, 4), -mask.width, mask.height);
+// hex.image(createShape(img, true, 3), -mask.width / 4, mask.height);
+// hex.image(createShape(img, false, 2), mask.width, mask.height);
+// image(hex, 0, 0);
 
-//   // Up right and left triangles
-//   triangle(
-//     x + tSide / 2,
-//     2 * y + tHeight,
-//     x + tSide,
-//     2 * y,
-//     x + tSide + tSide / 2,
-//     tHeight + 2 * y
-//   );
-//   triangle(
-//     -x + tSide / 2,
-//     2 * -y + tHeight,
-//     -x + tSide,
-//     2 * -y,
-//     -x + tSide + tSide / 2,
-//     tHeight + 2 * -y
-//   );
-//   triangle(
-//     -x + tSide / 2,
-//     2 * y + tHeight,
-//     -x + tSide,
-//     2 * y,
-//     -x + tSide + tSide / 2,
-//     tHeight + 2 * y
-//   );
-//   triangle(
-//     x + tSide / 2,
-//     2 * -y + tHeight,
-//     x + tSide,
-//     2 * -y,
-//     x + tSide + tSide / 2,
-//     tHeight + 2 * -y
-//   );
+//? Masks
+// image(createShape(img, false, 0), x, y);
+// image(createShape(img, false, 0), -x, -y);
+// image(createShape(img, true, 5), x + mask.width / 2, y);
+// image(createShape(img, true, 5), - x - mask.width / 2, -y);
+// image(createShape(img, true, 1), x -mask.width / 2, y);
+// image(createShape(img, true, 1), -x +mask.width / 2, -y);
+// image(createShape(img, false, 4), x -mask.width / 2, y - mask.height);
+// image(createShape(img, false, 4), x -mask.width / 2, y - mask.height);
+// image(createShape(img, true, 3), x, y - mask.height);
+// image(createShape(img, true, 3), x, mask.height - y);
+// image(createShape(img, false, 2), x + mask.width / 2, y - mask.height);
+// image(createShape(img, false, 2), x + mask.width / 2, y - mask.height);
 
-//   // Down middle triangle both directions
-//   triangle(
-//     x + tSide / 2,
-//     2 * y + tHeight,
-//     x + tSide,
-//     2 * y + 2 * tHeight,
-//     x,
-//     2 * y + 2 * tHeight
-//   );
-//   triangle(
-//     -x + tSide / 2,
-//     2 * -y + tHeight,
-//     -x + tSide,
-//     2 * -y + 2 * tHeight,
-//     -x,
-//     2 * -y + 2 * tHeight
-//   );
-//   triangle(
-//     -x + tSide / 2,
-//     2 * y + tHeight,
-//     -x + tSide,
-//     2 * y + 2 * tHeight,
-//     -x,
-//     2 * y + 2 * tHeight
-//   );
-//   triangle(
-//     x + tSide / 2,
-//     2 * -y + tHeight,
-//     x + tSide,
-//     2 * -y + 2 * tHeight,
-//     x,
-//     2 * -y + 2 * tHeight
-//   );
-
-//   // Down right and left triangles
-//   triangle(
-//     x + tSide + tSide / 2,
-//     2 * y + tHeight,
-//     x + tSide,
-//     2 * y + 2 * tHeight,
-//     x + tSide / 2,
-//     2 * y + tHeight
-//   );
-//   triangle(
-//     -x + tSide + tSide / 2,
-//     2 * -y + tHeight,
-//     -x + tSide,
-//     2 * -y + 2 * tHeight,
-//     -x + tSide / 2,
-//     2 * -y + tHeight
-//   );
-//   triangle(
-//     -x + tSide + tSide / 2,
-//     2 * y + tHeight,
-//     -x + tSide,
-//     2 * y + 2 * tHeight,
-//     -x + tSide / 2,
-//     2 * y + tHeight
-//   );
-//   triangle(
-//     x + tSide + tSide / 2,
-//     2 * -y + tHeight,
-//     x + tSide,
-//     2 * -y + 2 * tHeight,
-//     x + tSide / 2,
-//     2 * -y + tHeight
-//   );
-// }
+//? Triangles
+// triangle(0, 0, tSide / 2, tHeight,  tSide,0);
+// triangle(-tSide / 2, tHeight, 0, 0, tSide / 2, tHeight);
+// triangle(tSide / 2, tHeight, tSide , 0, tSide / 2 + tSide, tHeight);
+// triangle(0, tHeight * 2, tSide / 2, tHeight, tSide, tHeight * 2);
+// triangle(-tSide / 2, tHeight, 0, tHeight * 2, tSide /2 , tHeight);
+// triangle(tSide / 2, tHeight, tSide, tHeight * 2, tSide + tSide / 2, tHeight)
