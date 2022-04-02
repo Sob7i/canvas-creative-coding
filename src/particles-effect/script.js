@@ -40,7 +40,7 @@ canvas.addEventListener('mousemove', (evt) => {
 canvas.addEventListener('click', (evt) => {
   mouse.x = evt.x
   mouse.y = evt.y
-console.log('particlesArray :>> ', particlesArray);
+
   for (let i = 0; i <= 10; i++) {
     if (particlesArray.length > 100) particlesArray.length = 70
     else particlesArray.push(new Particles())
@@ -74,7 +74,6 @@ class Particles {
     ctx.fillStyle = this.color
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
     ctx.fill()
-    // ctx.closePath()
   }
 }
 
@@ -86,7 +85,7 @@ function init() {
 }
 
 // Update x, y coordinates and draw particles
-function handleParticle() {
+function createPattern() {
   for (let i = 0; i < particlesArray.length; i++) {
     particlesArray[i].update()
     particlesArray[i].draw()
@@ -120,7 +119,7 @@ function handleParticle() {
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.fillStyle = 'rgba(0, 0, 0, 0.02)'
-  handleParticle()
+  createPattern()
   hue += 0.5
   requestAnimationFrame(animate)
 }

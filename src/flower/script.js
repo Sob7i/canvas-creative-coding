@@ -10,6 +10,10 @@ function setup() {
   return canvas;
 }
 
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
+}
+
 function draw() {
   p.fill(color(random(255), random(200, 210), random(200, 255), 78)); // blue
   petals();

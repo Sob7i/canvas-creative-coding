@@ -1,5 +1,5 @@
-//? tSide is the length of the side of the triangle
-let tSide = 1750;
+//? tSide is the side's length of the triangle
+let tSide = 150;
 
 //? This is calculating the height of the triangle based on the side length.
 let tHeight = (tSide * Math.sqrt(3)) / 2;
@@ -31,18 +31,22 @@ function updateImage() {
 }
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight).background(25);
-  background(25);
+  createCanvas(window.innerWidth, window.innerHeight)
   frameRate(10);
-  // noLoop();
+  noLoop();
 }
 
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight);
 }
 
+function touchEnded(event) {
+  noLoop();
+}
+
 function mouseWheel(event) {
   if (event.delta > 0) {
+    loop();
     if (tSide <= 150) {
       img = updateImage();
       tSide = 1750;
@@ -56,7 +60,7 @@ function mouseWheel(event) {
       tHeight = (tSide * Math.sqrt(3)) / 2;
     }
   } else {
-    if (tHeight >= 2700) {
+    if (tHeight >= 2700 || tSide >= 1750) {
       return;
     } else {
       tSide += 30;
@@ -66,7 +70,8 @@ function mouseWheel(event) {
 }
 
 function draw() {
-  translate(width / 2 - tSide, height / 2 - tHeight);
+  // background(0);
+  translate(width / 2 - tSide, height / 2 - tHeight / 2);
 
   //? create a graphics object that is used as a mask
   mask = createGraphics(tSide, tHeight);
@@ -77,13 +82,13 @@ function draw() {
   mask.endShape(CLOSE);
   img.mask(mask);
 
-  hex = createGraphics(mask.width * 2, mask.height * 2);
+  hex = createGraphics(mask.width * 2, mask.height * 2 - 1);
   hex.image(createShape(img, false, 0), mask.width / 2, 0);
-  hex.image(createShape(img, true, 5), mask.width, 0);
-  hex.image(createShape(img, true, 1), 0, 0);
-  hex.image(createShape(img, false, 4), 0, mask.height);
+  hex.image(createShape(img, true, 1), mask.width, 0);
+  hex.image(createShape(img, true, 5), 0, 0);
+  hex.image(createShape(img, false, 4), 0, mask.height - 1);
   hex.image(createShape(img, true, 3), mask.width / 2, mask.height);
-  hex.image(createShape(img, false, 2), mask.width, mask.height);
+  hex.image(createShape(img, false, 2), mask.width, mask.height - 1);
   image(hex, 0, 0);
 
   createPattern();
@@ -110,9 +115,9 @@ function createShape(img, reflect, rotations) {
   }
 
   //? if the image should be reflected, flip the image
-  if (reflect) {
-    g.scale(-1, 1);
-  }
+  // if (reflect) {
+  //   g.scale(-1, 1);
+  // }
 
   //? rotate the image by 60 degrees for each rotation
   g.rotate(radians(rotations * 60));
@@ -126,7 +131,7 @@ function createPattern() {
   let isOddRow = false;
   let xOffset = 0;
 
-  for (let y = 0; y < height; y += hex.height / 2) {
+  for (let y = 0; y < height; y += hex.height / 2 - 1) {
     if (isOddRow) {
       xOffset = mask.width * 1.5;
     } else {
