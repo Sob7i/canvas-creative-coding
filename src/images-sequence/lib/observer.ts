@@ -1,31 +1,30 @@
+export enum EventType {
+  FIRST_IMAGE_LOADED = 'FIRST_IMAGE_LOADED',
+  PRIORITY_IMAGES_LOADED = 'PRIORITY_IMAGES_LOADED',
+  ALL_IMAGES_LOADED = 'ALL_IMAGES_LOADED'
+}
+
 export default function createObservable<MessageType>() {
-  const listeners: Set<(msg: MessageType) => void> = new Set()
   type ListenerType = (msg: MessageType) => void
-  enum EventType {
-    FIRST_IMAGE_LOADED,
-    PRIORITY_IMAGES_LOADED,
-    ALL_IMAGES_LOADED
-  }
+  const listeners: Map<EventType, ListenerType> = new Map()
+  console.log('listeners', listeners)
 
   return {
-    register(cb: ListenerType): () => void {
-      listeners.add(cb)
+    add(event: EventType, cb: ListenerType): () => void {
+      listeners.set(event, cb)
       return () => {
-        listeners.delete(cb)
+        listeners.delete(event)
       }
     },
-
-    publish(msg: MessageType): void {
+    emit(msg: MessageType): void {
       listeners.forEach((cb) => cb(msg))
     },
     on(event: EventType, cb: ListenerType): void {
-
     },
     once(event: EventType, cb: ListenerType): void {
-
     },
-    off(event: EventType, cb: ListenerType): void {
-
+    off(event: EventType): void {
+      listeners.delete(event)
     }
   }
 }
