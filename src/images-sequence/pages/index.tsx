@@ -1,11 +1,16 @@
-import createObservable, { EventType } from '../lib/observer'
+import createObservable, { EventType } from '../utils/observer'
 
 export default function Home() {
   const observableFunction = createObservable<string>()
-  observableFunction.add(
-    EventType.ALL_IMAGES_LOADED,
-    () => console.log('added a listener')
+
+  observableFunction.once(
+    EventType.FIRST_IMAGE_LOADED,
+    () => console.log('fire once: ', EventType.FIRST_IMAGE_LOADED)
   )
+
+  observableFunction.emit(EventType.FIRST_IMAGE_LOADED)
+  observableFunction.emit(EventType.PRIORITY_IMAGES_LOADED)
+  observableFunction.emit(EventType.ALL_IMAGES_LOADED)
 
   return (
     <div>
