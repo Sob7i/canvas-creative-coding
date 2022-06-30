@@ -16,10 +16,12 @@ export default function createObservable<MessageType>() {
     }
   }
 
-  function emit(msg: MessageType): void {
-    return Object.entries(listeners).forEach(([, cbs]) => {
-      cbs.map(cb => cb(msg))
-    })
+  function emit(event: EventType, msg?: MessageType): boolean {
+    const cbs = listeners[event]
+    if (!cbs) return false;
+
+    cbs.forEach((cb: ListenerType) => cb(msg))
+    return true
   }
 
   function on(event: EventType, cbs: ListenerType[]): void {
@@ -47,3 +49,5 @@ export default function createObservable<MessageType>() {
 
   return { add, emit, on, once, off }
 }
+
+export const loadingObservable = createObservable<string>()
