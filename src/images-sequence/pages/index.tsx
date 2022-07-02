@@ -33,6 +33,15 @@ export default function Home() {
           prioFrames={prioFrames}
           loadingFallback={<p>loading...</p>}
         />
+        <div id='scroll-down'>
+          Scroll up 👆
+        </div>
+        <div id='scroll-down'>
+          Scroll up 👆
+        </div>
+        <div id='scroll-down'>
+          Scroll up 👆
+        </div>
       </main>
     </div>
   )

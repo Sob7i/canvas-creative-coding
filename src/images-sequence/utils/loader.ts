@@ -12,14 +12,20 @@ export interface LoaderProps {
   frames: string[]
 }
 
+interface LoaderResult {
+  images: [] | HTMLImageElement[];
+  isComplete: boolean;
+}
+
 export default async function loadImgsAsync({
   prioFrames = [],
   frames = [],
-}: LoaderProps) {
+}: LoaderProps): Promise<LoaderResult> {
   const prioQueue: number[] = createPrioQueue()
   const loadingQueue: number[] = createLoadingQueue()
   let isComplete: boolean = true
-  let images: HTMLImageElement[] | [] = []
+  let images: LoaderResult['images'] = []
+  let sequenceLength: number = images.length - 1 ?? 0
 
   function createPrioQueue() {
     const queue: number[] = [...prioFrames];
@@ -55,7 +61,7 @@ export default async function loadImgsAsync({
     function onLoad() {
       img.removeEventListener('load', onLoad);
       images[i] = img
-      // console.log(' images[i]',  images[i])
+
       if (i === 0) {
         loadingObservable.emit(EventType.FIRST_IMAGE_LOADED)
       }
@@ -86,7 +92,7 @@ export default async function loadImgsAsync({
     }
   }
 
-  return await loadNextImage()
+  return loadNextImage()
     .then(() => {
       return { images, isComplete }
     })
