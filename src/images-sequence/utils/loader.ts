@@ -5,7 +5,7 @@
   TODO - create load next image function
 */
 
-import { EventType, loadingObservable } from "./observer"
+import { EventType, loader } from "./observer"
 
 export interface LoaderProps {
   prioFrames: number[]
@@ -17,56 +17,34 @@ interface LoaderResult {
   isComplete: boolean;
 }
 
-export default async function loadImgsAsync({
+export default async function loadImagesAsync({
   prioFrames = [],
   frames = [],
-}: LoaderProps): Promise<LoaderResult> {
-  const prioQueue: number[] = createPrioQueue()
-  const loadingQueue: number[] = createLoadingQueue()
-  let isComplete: boolean = true
+}) {
+  const prioQueue: number[] = createPrioQueue(prioFrames)
+  const loadingQueue: number[] = createLoadingQueue(frames).filter(elem => elem !== 0)
+  let isComplete: boolean = false
   let images: LoaderResult['images'] = []
-  let sequenceLength: number = images.length - 1 ?? 0
 
-  function createPrioQueue() {
-    const queue: number[] = [...prioFrames];
-
-    if (!queue.length) {
-      queue.push(0);
-      queue.push(Math.round(frames.length / 2));
-      queue.push(frames.length - 1);
-    }
-
-    return queue;
-  }
-
-  function createLoadingQueue() {
-    const queue = frames
-      .map((f, i) => i)
-      .sort((a, b) => {
-        const r = Math.abs(a - frames.length / 2) - Math.abs(b - frames.length / 2)
-        // console.log('r', r)
-        return r
-      });
-
-    return queue
-  }
-
-  async function loadImage(i: number): Promise<void> {
+  function loadImage(i: number): Promise<void> {
     if (!frames.length) return
 
     if (images[i]) {
-      return loadNextImage();
+      loadNextImage();
     }
 
     function onLoad() {
-      img.removeEventListener('load', onLoad);
       images[i] = img
 
       if (i === 0) {
-        loadingObservable.emit(EventType.FIRST_IMAGE_LOADED)
+        loader.emit(EventType.FIRST_IMAGE_LOADED, images)
       }
 
-      return loadNextImage()
+      loadNextImage()
+
+      return () => {
+        img.removeEventListener('load', onLoad);
+      }
     }
 
     const img = new Image;
@@ -74,29 +52,45 @@ export default async function loadImgsAsync({
     img.addEventListener('load', onLoad)
   }
 
-  async function loadNextImage(): Promise<void> {
+  function loadNextImage() {
     if (prioQueue.length) {
-      const ImgIndex = prioQueue.shift()
-      await loadImage(ImgIndex);
+      loadImage(prioQueue.shift())
 
       if (!prioQueue.length) {
-        loadingObservable.emit(EventType.PRIORITY_IMAGES_LOADED)
+        loader.emit(EventType.PRIORITY_IMAGES_LOADED, images)
       }
     } else if (loadingQueue.length) {
-      const ImgIndex = loadingQueue.shift()
-      await loadImage(ImgIndex)
+      loadImage(loadingQueue.shift())
     }
     else {
-      isComplete = false
-      loadingObservable.emit(EventType.ALL_IMAGES_LOADED)
+      isComplete = true
+      loader.emit(EventType.ALL_IMAGES_LOADED, images)
     }
   }
 
-  return loadNextImage()
-    .then(() => {
-      return { images, isComplete }
-    })
-    .catch(error => {
-      throw new Error(`Error loading images: ${error}`)
-    })
+  loadNextImage()
+}
+
+function createLoadingQueue(frames: string[]) {
+  const queue = frames
+    .map((f, i) => i)
+    .sort((a, b) => {
+      // TODO write a describtion
+      const r = Math.abs(a - frames.length / 2) - Math.abs(b - frames.length / 2)
+      return r
+    });
+
+  return queue
+}
+
+function createPrioQueue(prioFrames: number[]) {
+  const queue: number[] = [...prioFrames];
+
+  if (!queue.length) {
+    queue.push(0);
+    queue.push(Math.round(frames.length / 2));
+    queue.push(frames.length - 1);
+  }
+
+  return queue;
 }

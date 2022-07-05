@@ -10,35 +10,15 @@ body {
   box-sizing: border-box;
 }
 
-#imgSS {
+.scroll-container {
   height: 100vh;
   background: black;
+  position: relative;
 }
 
-#imgSS-sticky {
+.scroll-sequence {
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
-  /* bottom: 0; */
-  /* left: 0; */
-  /* right: 0; */
-  z-index: -5;
-  height: 100vh;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.sticky {
-  position: sticky;
-  top: 0;
-  z-index: -5;
-  height: 100vh;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-#scroll-down {
-  min-height: 500px;
-  height: auto;
+  height: 100%;
 }

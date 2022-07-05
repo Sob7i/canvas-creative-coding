@@ -28,9 +28,9 @@ export default function createObservable<MessageType>() {
     add(event, cbs)
   }
 
-  function once(event: EventType, cb: () => void): void {
-    function callOnce() {
-      cb()
+  function once(event: EventType, cb: (msg: MessageType) => void): void {
+    function callOnce(msg: MessageType) {
+      cb(msg)
       return () => {
         remove(event)
       }
@@ -50,4 +50,4 @@ export default function createObservable<MessageType>() {
   return { add, emit, on, once, off }
 }
 
-export const loadingObservable = createObservable<string>()
+export const loader = createObservable<[] | HTMLImageElement[]>()
