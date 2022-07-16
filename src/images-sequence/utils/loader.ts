@@ -1,6 +1,10 @@
 /*
-  TODO - create priority queue (input as arg)
-  TODO - create loading queue 
+  TODO - create loading queue :
+    * start from the prio queue ex: total is 350 => prio queue is [0, 50, 100, 150, 200, 250, 300, 350]
+    * Load 10 frames each time ex: [10, 60, 110, 160, 210, 260, 310] => [20, 70, 120, 170, 220, 270, 320]
+    * When all 10ths are loaded then load mid of each them =>  [5, 55, 105, 155, 205, 255, 305]
+    * When all 5ths are loaded then load minmax => [4, 54, 104, 154, 204, ...] => [6, 56, 106, 156, 206, ...]
+    * Update the images array after each iteration 
   TODO - create load image function:
   TODO - create load next image function
 */

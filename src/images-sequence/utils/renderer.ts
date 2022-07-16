@@ -1,16 +1,13 @@
 export default function createRenderer({
   canvasRef,
-  containerRef,
   images,
   imageIndex
 }) {
   let canvas: HTMLCanvasElement | null
-  let container: HTMLDivElement | null
   let ctx: CanvasRenderingContext2D | null
 
   function setup() {
     canvas = canvasRef.current;
-    container = containerRef.current;
     ctx = canvas?.getContext('2d')
 
     window.addEventListener('resize', () => resize());
@@ -18,8 +15,8 @@ export default function createRenderer({
   }
 
   function resize() {
-    const w = container.clientWidth;
-    const h = container.clientHeight;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
     canvas.style.height = `${h}px`;
     canvas.style.width = `${w}px`;
     canvas.height = h;

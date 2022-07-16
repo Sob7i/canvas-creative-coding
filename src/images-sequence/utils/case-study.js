@@ -66,7 +66,7 @@ class Canvas {
     this.cover = e.cover;
     this.displayIndex = 0;
   }
-  
+
   setup() {
     this.canvas = document.createElement("canvas");
     this.container.appendChild(this.canvas);
