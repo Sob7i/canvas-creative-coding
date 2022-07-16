@@ -2,6 +2,7 @@
   "name": "images-sequence",
   "version": "0.1.0",
   "private": true,
+  "moduleResolution": "node",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
