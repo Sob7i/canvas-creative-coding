@@ -44,11 +44,13 @@ export default function createRenderer({
   }
 
   function drawImage(i: number) {
-    imageIndex = i
-    const x = Math.floor((canvas.width - images[imageIndex].naturalWidth) / 2);
-    const y = Math.floor((canvas.height - images[imageIndex].naturalHeight) / 2);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(images[imageIndex], x, y);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx.drawImage(images[i], 0, 0, window.innerWidth, window.innerHeight);
+    // imageIndex = i
+    // const x = Math.floor((canvas.width - images[i].naturalWidth) / 2);
+    // const y = Math.floor((canvas.height - images[i].naturalHeight) / 2);
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ctx.drawImage(images[i], x, y);
   }
 
   return {

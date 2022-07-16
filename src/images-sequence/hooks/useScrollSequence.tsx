@@ -158,17 +158,15 @@ export default function ImgSequenceScroll({
   } = useImgSequenceScroll({ frames, prioFrames })
 
   return (
-    <div className='scroll-container'>
-      <div
-        ref={containerRef}
-        className='scroll-sequence'
-        style={{ height: containerHeight }}
-      >
-        <canvas
-          className={cn}
-          ref={canvasRef}
-        />
-      </div>
+    <div
+      ref={containerRef}
+      className='scroll-sequence'
+      style={{ height: containerHeight }}
+    >
+      <canvas
+        className={cn}
+        ref={canvasRef}
+      />
     </div>
   )
 }
