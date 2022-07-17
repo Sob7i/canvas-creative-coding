@@ -11,10 +11,9 @@ export interface LoaderProps {
 
 interface LoaderResult {
   images: [] | HTMLImageElement[];
-  isComplete: boolean;
 }
 
-export default async function loadImagesAsync({
+export default function loadImages({
   prioFrames = [],
   frames = [],
 }) {

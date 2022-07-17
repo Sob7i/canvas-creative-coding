@@ -6,16 +6,14 @@ import {
 } from 'react'
 
 import { EventType } from '../utils/observer'
-import loadImagesAsync, { LoaderProps } from '../utils/loader'
+import loadImages, { LoaderProps } from '../utils/loader'
 import createRenderer from '../utils/renderer'
 import { loader } from '../utils/loader'
 
-type Props = LoaderProps
-
-export function useImgSequenceScroll({
+export function useImgsSequence({
   frames,
   prioFrames
-}: Props) {
+}: LoaderProps) {
   const containerRef: MutableRefObject<HTMLDivElement | null> = useRef(null)
   const canvasRef: MutableRefObject<HTMLCanvasElement | null> = useRef(null)
 
@@ -39,7 +37,7 @@ export function useImgSequenceScroll({
 
   // Images loading
   useEffect(() => {
-    loadImagesAsync({ frames, prioFrames })
+    loadImages({ frames, prioFrames })
   }, [frames, prioFrames])
 
   // Update & draw first image
@@ -113,7 +111,7 @@ export function useImgSequenceScroll({
 
   }, [frames.length, renderImage])
 
-  // ? Update images state 
+  // Update images state 
   useEffect(() => {
     const handleAllLoadedImgs = (imgs: [] | HTMLImageElement[]) => {
       setLoading(false)
@@ -144,36 +142,4 @@ export function useImgSequenceScroll({
     containerRef,
     containerHeight
   }
-}
-
-type ScrollSequenceProps = Props & {
-  loadingFallback: JSX.Element
-  cn?: string
-}
-
-export default function ImgSequenceScroll({
-  frames,
-  prioFrames,
-  loadingFallback,
-  cn = ''
-}: ScrollSequenceProps): JSX.Element {
-  const {
-    containerHeight,
-    progress,
-    canvasRef,
-    containerRef
-  } = useImgSequenceScroll({ frames, prioFrames })
-
-  return (
-    <div
-      ref={containerRef}
-      className='scroll-sequence-container'
-      style={{ height: containerHeight }}
-    >
-      <canvas
-        className={cn}
-        ref={canvasRef}
-      />
-    </div>
-  )
 }

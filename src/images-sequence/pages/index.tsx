@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ImgSequenceScroll from "../hooks/useScrollSequence";
+import ImgsSequence from "../components/image-sequence";
 
 // Apple airpod sequence -> 131 frames
 const BASE_URL = 'https://www.apple.com/105/media/us/airpods-pro/2019/1299e2f5_9206_4470_b28e_08307a42f19b/anim/sequence/large/02-head-bob-turn/'
@@ -35,7 +35,7 @@ export default function Home() {
       <div className='scroll-down'>
         Scroll down 👇
       </div>
-      <ImgSequenceScroll
+      <ImgsSequence
         frames={frames}
         prioFrames={prioFrames}
         loadingFallback={<p>loading...</p>}
