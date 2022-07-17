@@ -100,14 +100,14 @@ export function useImgSequenceScroll({
       }
     }
 
-    const handlePrioloadedImgs = (imgs: [] | HTMLImageElement[]) => {
+    const handlePrioLoadedImgs = (imgs: [] | HTMLImageElement[]) => {
       setImages(imgs)
       window.addEventListener('scroll', handlScroll)
     }
 
     loader.once(
       EventType.PRIORITY_IMAGES_LOADED,
-      handlePrioloadedImgs
+      handlePrioLoadedImgs
     )
 
 
