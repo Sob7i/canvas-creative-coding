@@ -4,7 +4,6 @@ import {
   useRef,
   MutableRefObject
 } from 'react'
-// import * as ScrollOut from 'scroll-out'
 
 import { EventType } from '../utils/observer'
 import loadImagesAsync, { LoaderProps } from '../utils/loader'
@@ -21,18 +20,14 @@ export function useImgSequenceScroll({
   const canvasRef: MutableRefObject<HTMLCanvasElement | null> = useRef(null)
 
   const [images, setImages] = useState<[] | HTMLImageElement[]>([])
+  const [containerHeight, setContainerHeight] = useState(0)
   const [isLoading, setLoading] = useState(false)
   const [imageIndex, setImageIndex] = useState(0)
   const [progress, setProgress] = useState(0)
-  const [containerHeight, setContainerHeight] = useState(0)
 
-  const { setup, renderImage } = createRenderer({
-    canvasRef,
-    images,
-    imageIndex
-  })
+  const { setup, renderImage } = createRenderer({ canvasRef, images, imageIndex })
 
-  // ? Canvas setup
+  // Canvas setup
   useEffect(() => {
     if (
       typeof window === 'undefined' ||
@@ -42,12 +37,12 @@ export function useImgSequenceScroll({
     setup()
   }, [setup])
 
-  // ? Images loading
+  // Images loading
   useEffect(() => {
     loadImagesAsync({ frames, prioFrames })
   }, [frames, prioFrames])
 
-  // ? Update & draw first image
+  // Update & draw first image
   useEffect(() => {
     const handleFirstLoadedImg = (imgs: [] | HTMLImageElement[]) => {
       setImages(imgs)
@@ -58,10 +53,10 @@ export function useImgSequenceScroll({
       EventType.FIRST_IMAGE_LOADED,
       handleFirstLoadedImg
     )
-  
+
   }, [renderImage])
 
-  // ? Register a scroll event
+  // Register a scroll event
   useEffect(() => {
     if (
       typeof window === 'undefined' ||
@@ -115,7 +110,7 @@ export function useImgSequenceScroll({
       handlePrioloadedImgs
     )
 
-    
+
   }, [frames.length, renderImage])
 
   // ? Update images state 
@@ -130,7 +125,7 @@ export function useImgSequenceScroll({
       handleAllLoadedImgs
     )
 
-    
+
   }, [])
 
   useEffect(() => {
