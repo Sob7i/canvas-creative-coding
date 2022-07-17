@@ -6,9 +6,10 @@ import {
 } from 'react'
 // import * as ScrollOut from 'scroll-out'
 
-import { loader, EventType } from '../utils/observer'
+import { EventType } from '../utils/observer'
 import loadImagesAsync, { LoaderProps } from '../utils/loader'
 import createRenderer from '../utils/renderer'
+import { loader } from '../utils/loader'
 
 type Props = LoaderProps
 
@@ -48,13 +49,16 @@ export function useImgSequenceScroll({
 
   // ? Update & draw first image
   useEffect(() => {
+    const handleFirstLoadedImg = (imgs: [] | HTMLImageElement[]) => {
+      setImages(imgs)
+      renderImage(0)
+    }
+
     loader.once(
       EventType.FIRST_IMAGE_LOADED,
-      (imgs) => {
-        setImages(imgs)
-        renderImage(0)
-      }
+      handleFirstLoadedImg
     )
+  
   }, [renderImage])
 
   // ? Register a scroll event
@@ -101,29 +105,37 @@ export function useImgSequenceScroll({
       }
     }
 
+    const handlePrioloadedImgs = (imgs: [] | HTMLImageElement[]) => {
+      setImages(imgs)
+      window.addEventListener('scroll', handlScroll)
+    }
+
     loader.once(
       EventType.PRIORITY_IMAGES_LOADED,
-      (imgs) => {
-        setImages(imgs)
-        window.addEventListener('scroll', handlScroll)
-      }
+      handlePrioloadedImgs
     )
+
+    
   }, [frames.length, renderImage])
 
   // ? Update images state 
   useEffect(() => {
+    const handleAllLoadedImgs = (imgs: [] | HTMLImageElement[]) => {
+      setLoading(false)
+      setImages(imgs)
+    }
+
     loader.once(
       EventType.ALL_IMAGES_LOADED,
-      (imgs) => {
-        setLoading(false)
-        setImages(imgs)
-      }
+      handleAllLoadedImgs
     )
+
+    
   }, [])
 
   useEffect(() => {
     if (!images[0]) return
-
+    // TODO: abstract the container height (it is currently a hack)
     const h = images[0].height * frames.length / 6
     setContainerHeight(h)
 
@@ -160,7 +172,7 @@ export default function ImgSequenceScroll({
   return (
     <div
       ref={containerRef}
-      className='scroll-sequence'
+      className='scroll-sequence-container'
       style={{ height: containerHeight }}
     >
       <canvas

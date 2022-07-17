@@ -1,15 +1,8 @@
-/*
-  TODO - create loading queue :
-    * start from the prio queue ex: total is 350 => prio queue is [0, 50, 100, 150, 200, 250, 300, 350]
-    * Load 10 frames each time ex: [10, 60, 110, 160, 210, 260, 310] => [20, 70, 120, 170, 220, 270, 320]
-    * When all 10ths are loaded then load mid of each them =>  [5, 55, 105, 155, 205, 255, 305]
-    * When all 5ths are loaded then load minmax => [4, 54, 104, 154, 204, ...] => [6, 56, 106, 156, 206, ...]
-    * Update the images array after each iteration 
-  TODO - create load image function:
-  TODO - create load next image function
-*/
+import EventEmitter from "events";
 
-import { EventType, loader } from "./observer"
+import { EventType } from "./observer"
+
+export const loader = new EventEmitter().setMaxListeners(0)
 
 export interface LoaderProps {
   prioFrames: number[]
@@ -27,7 +20,6 @@ export default async function loadImagesAsync({
 }) {
   const prioQueue: number[] = createPrioQueue(prioFrames)
   const loadingQueue: number[] = createLoadingQueue(frames).filter(elem => elem !== 0)
-  let isComplete: boolean = false
   let images: LoaderResult['images'] = []
 
   function loadImage(i: number): Promise<void> {
@@ -67,7 +59,6 @@ export default async function loadImagesAsync({
       loadImage(loadingQueue.shift())
     }
     else {
-      isComplete = true
       loader.emit(EventType.ALL_IMAGES_LOADED, images)
     }
   }
@@ -75,6 +66,14 @@ export default async function loadImagesAsync({
   loadNextImage()
 }
 
+/*
+ TODO: Add auto resolution algorithem
+  * start from the prio queue ex: total is 350 => prio queue is [0, 50, 100, 150, 200, 250, 300, 350]
+  * Load 10 frames each time ex: [10, 60, 110, 160, 210, 260, 310] => [20, 70, 120, 170, 220, 270, 320]
+  * When all 10ths are loaded then load mid of each them =>  [5, 55, 105, 155, 205, 255, 305]
+  * When all 5ths are loaded then load minmax => [4, 54, 104, 154, 204, ...] => [6, 56, 106, 156, 206, ...]
+  * Update the images array after each iteration 
+*/
 function createLoadingQueue(frames: string[]) {
   const queue = frames
     .map((f, i) => i)

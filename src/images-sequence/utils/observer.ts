@@ -39,15 +39,11 @@ export default function createObservable<MessageType>() {
     listeners[event] = [callOnce]
   }
 
-  function off(event: EventType): void {
-    remove(event)
-  }
-
   function remove(event: EventType): boolean {
     return delete listeners[event]
   }
 
-  return { add, emit, on, once, off }
+  return { add, emit, on, once }
 }
 
 export const loader = createObservable<[] | HTMLImageElement[]>()

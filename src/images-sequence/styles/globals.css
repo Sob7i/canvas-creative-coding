@@ -11,10 +11,6 @@ body {
   box-sizing: border-box;
 }
 
-.scroll-container {
-  background: black;
-}
-
 canvas {
   position: -webkit-sticky;
   position: sticky;
