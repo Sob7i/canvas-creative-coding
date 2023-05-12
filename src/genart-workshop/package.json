@@ -4,12 +4,14 @@
   "description": "",
   "main": "sketch.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx canvas-sketch-cli sketch.js --output=./tmp/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "canvas-sketch": "^0.7.5"
+    "canvas-sketch": "^0.7.5",
+    "canvas-sketch-util": "^1.10.0"
   }
 }
